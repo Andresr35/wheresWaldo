@@ -27,11 +27,22 @@ img {
 .dropDown {
   position: absolute;
   z-index: 2;
-  background-color: black;
-  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.733);
+  padding: 0.5em;
+  border-radius: 20px;
+}
+.waldoImage {
   border-radius: 30px;
 }
-.dropDown img {
+.character {
   height: 6em;
   width: auto;
+}
+.character:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.character:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
