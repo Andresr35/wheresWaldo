@@ -16,3 +16,22 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+img {
+  width: 100%;
+  height: auto;
+}
+#root {
+  margin: 2em;
+}
+
+.dropDown {
+  position: absolute;
+  z-index: 2;
+  background-color: black;
+  padding: 1em;
+  border-radius: 30px;
+}
+.dropDown img {
+  height: 6em;
+  width: auto;
+}
