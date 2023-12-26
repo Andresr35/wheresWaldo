@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
-import { Link } from "react-router-dom";
 
-const Home = () => {
-  const [coord, setCoord] = useState([]);
+const FirstMap = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [coord, setCoord] = useState([]);
   const clientWidth = useRef(0);
   const clientHeight = useRef(0);
 
@@ -28,27 +27,18 @@ const Home = () => {
       setCoord([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
     }
   };
-
-  const startGame = async () => {
-    //send start game to backend to initialize a game model in the backend
-    const date = new Date();
-
-    console.log(`Game has started at ${date.toLocaleDateString()}`);
+  const validateClick = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/game/gameOne/waldo");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <main onClick={dropDownControl}>
+    <div onClick={dropDownControl}>
       <Nav />
-      <h2>Welcome to my game!</h2>
-      <h4>Description</h4>
-      <p>
-        This a photo tagging game. In order to get higher on the leaderboard,
-        you have to find Waldo and his friends as fast as you can! Here is an
-        example.
-      </p>
-      <Link to="/gameOne" onClick={startGame}>
-        Start
-      </Link>
+      This should be the first game and should initialize some backend stuff
       <div style={{ position: "relative" }}>
         {showDropdown && (
           <CharacterDropdown
@@ -59,12 +49,12 @@ const Home = () => {
         )}
         <img
           className="waldoImage"
-          src="../../WaldoCharacters.jpg"
+          src="../../waldoAtHollywood.jpg"
           alt="Waldo example"
         />
       </div>
-    </main>
+    </div>
   );
 };
 
-export default Home;
+export default FirstMap;
