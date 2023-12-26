@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 const GameSchema = new Schema({
   startTime: Date,
   endTime: Date,
-  firstGame: mongoose.Types.ObjectId,
-  secondGame: mongoose.Types.ObjectId,
-  thirdGame: mongoose.Types.ObjectId,
+  firstGame: { type: Schema.Types.ObjectId, ref: "Map" },
+  secondGame: { type: Schema.Types.ObjectId, ref: "Map" },
+  thirdGame: { type: Schema.Types.ObjectId, ref: "Map" },
 });
 
 GameSchema.virtual("finishTime").get(function () {

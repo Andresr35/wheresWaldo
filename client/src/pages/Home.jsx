@@ -30,10 +30,26 @@ const Home = () => {
   };
 
   const startGame = async () => {
-    //send start game to backend to initialize a game model in the backend
     const date = new Date();
-
-    console.log(`Game has started at ${date.toLocaleDateString()}`);
+    if (!localStorage.getItem("userID")) {
+      // User does not exist
+      const res = await fetch("http://localhost:3000/api/game/start", {
+        method: "POST",
+        "Content-Type": "application/json",
+        body: JSON.stringify({
+          date: date,
+        }),
+      });
+      const result = await res.json();
+      localStorage.setItem("userID", result.user._id);
+    } else {
+      // is game finished? if not continue else create a new user
+      const res = await fetch(
+        `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
+      );
+      const result = await res.json();
+      console.log(result);
+    }
   };
 
   return (
@@ -55,6 +71,7 @@ const Home = () => {
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
+            game="Tutorial"
           />
         )}
         <img

@@ -27,13 +27,6 @@ const FirstMap = () => {
       setCoord([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
     }
   };
-  const validateClick = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/api/game/gameOne/waldo");
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <div onClick={dropDownControl}>
@@ -45,6 +38,7 @@ const FirstMap = () => {
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
+            game="gameOne"
           />
         )}
         <img
