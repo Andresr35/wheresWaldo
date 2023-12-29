@@ -1,27 +1,27 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useCharacters from "../hooks/useCharacters";
 
 const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
-  const [foundCharacters, setFoundCharacters] = useState({
-    foundWaldo: false,
-    foundWenda: false,
-    foundWizard: false,
-    foundOdlaw: false,
-  });
   const navigate = useNavigate();
+  const { foundCharacters, setFoundCharacters } = useCharacters(game);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch(
-        `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
-      );
-      const result = await res.json();
-      setFoundCharacters(result.result.game[game]);
-    };
-    fetchUser();
-  }, [game]);
-
+  const finishGame = async () => {
+    const res = await fetch("http://localhost:3000/api/game/finish", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        finishTime: Date.now(),
+        userID: localStorage.getItem("userID"),
+      }),
+    });
+    const result = await res.json();
+    console.log(result);
+    if (result._doc.finished) navigate("/leaderboard");
+    else console.log("What happened?");
+  };
   const validateClick = async (character) => {
     try {
       console.log(
@@ -45,9 +45,23 @@ const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
 
       const result = await res.json();
       console.log(result);
+
       if (result.found) {
         if (result.foundCharacters.foundEveryone) {
-          navigate("/gameThree");
+          switch (game) {
+            case "firstGame":
+              navigate("/gameTwo");
+              break;
+            case "secondGame":
+              navigate("/gameThree");
+              break;
+            case "thirdGame":
+              finishGame();
+              break;
+            default:
+              console.log("What game are we on? Maybe tutorial?");
+              break;
+          }
         } else {
           setFoundCharacters(result.foundCharacters);
         }

@@ -11,6 +11,8 @@ router.get("/tutorial", (req, res, next) => {
   res.send("Welcome to the tutorial!");
 });
 router.post("/start", mapController.startGame);
+router.post("/finish", mapController.finishGame);
+
 router.post("/tutorial/waldo", mapController.findWaldoTutorial);
 
 router.post("/firstGame/waldo", mapController.findWaldoGameOne);

@@ -3,6 +3,25 @@ const Map = require("../models/Map");
 const Game = require("../models/Game");
 const User = require("../models/User");
 
+const findUser = async (userID) => {
+  return await User.findById(userID)
+    .populate({
+      path: "game",
+      populate: [
+        {
+          path: "secondGame",
+          model: "Map",
+        },
+        {
+          path: "firstGame",
+          model: "Map",
+        },
+        { path: "thirdGame", model: "Map" },
+      ],
+    })
+    .exec();
+};
+
 exports.findWaldoTutorial = asyncHandler(async (req, res, next) => {
   const coord = req.body.coord;
   if (!coord) {
@@ -44,6 +63,41 @@ exports.startGame = asyncHandler(async (req, res, next) => {
     user: { ...user, game: { ...game, firstGame } },
     game,
   });
+});
+
+exports.finishGame = asyncHandler(async (req, res, next) => {
+  // We need to get the finish time
+  try {
+    const { finishTime, userID } = req.body;
+    if (!finishTime)
+      return res.json({
+        message: "A finishTime was not given in the body",
+        finshed: false,
+      });
+    if (!userID)
+      return res.json({
+        message: "A userID was not given in the body",
+        finished: false,
+      });
+    const user = await findUser(userID);
+    const result = await Game.findByIdAndUpdate(
+      user.game._id,
+      {
+        ...user.game._doc,
+        endTime: finishTime,
+        finished: true,
+      },
+      { new: true }
+    );
+    res.json({
+      message: "Game was finished!",
+      finished: true,
+      ...result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ ...error, finished: false });
+  }
 });
 
 //-------Game One------------
@@ -191,25 +245,6 @@ exports.findOdlawGameOne = asyncHandler(async (req, res, next) => {
     res.json({ ...error, found: false });
   }
 });
-
-const findUser = async (userID) => {
-  return await User.findById(userID)
-    .populate({
-      path: "game",
-      populate: [
-        {
-          path: "secondGame",
-          model: "Map",
-        },
-        {
-          path: "firstGame",
-          model: "Map",
-        },
-        { path: "thirdGame", model: "Map" },
-      ],
-    })
-    .exec();
-};
 
 //-------Game Two------------
 exports.findCharacterGameTwo = asyncHandler(async (req, res, next) => {
