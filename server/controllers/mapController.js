@@ -191,3 +191,214 @@ exports.findOdlawGameOne = asyncHandler(async (req, res, next) => {
     res.json({ ...error, found: false });
   }
 });
+
+const findUser = async (userID) => {
+  return await User.findById(userID)
+    .populate({
+      path: "game",
+      populate: [
+        {
+          path: "secondGame",
+          model: "Map",
+        },
+        {
+          path: "firstGame",
+          model: "Map",
+        },
+        { path: "thirdGame", model: "Map" },
+      ],
+    })
+    .exec();
+};
+
+//-------Game Two------------
+exports.findCharacterGameTwo = asyncHandler(async (req, res, next) => {
+  try {
+    const { character } = req.params;
+    const { coord } = req.body;
+    let found = false;
+    let foundCharacters = {};
+    if (!coord) {
+      res.json({ message: "No coords were received", found });
+    } else {
+      const user = await findUser(req.body.userID);
+      switch (character) {
+        case "waldo":
+          if (
+            coord[0] >= 0.6 &&
+            coord[0] <= 0.63 &&
+            coord[1] >= 0.36 &&
+            coord[1] <= 0.42
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.secondGame._id,
+              { ...user.game.secondGame._doc, foundWaldo: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Waldo was not found", found });
+          }
+          break;
+        case "wenda":
+          if (
+            coord[0] >= 0.76 &&
+            coord[0] <= 0.78 &&
+            coord[1] >= 0.39 &&
+            coord[1] <= 0.44
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.secondGame._id,
+              { ...user.game.secondGame._doc, foundWenda: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Wenda was not found", found });
+          }
+          break;
+        case "wizard":
+          if (
+            coord[0] >= 0.26 &&
+            coord[0] <= 0.28 &&
+            coord[1] >= 0.34 &&
+            coord[1] <= 0.38
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.secondGame._id,
+              { ...user.game.secondGame._doc, foundWizard: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Wizard was not found", found });
+          }
+          break;
+        case "odlaw":
+          if (
+            coord[0] >= 0.09 &&
+            coord[0] <= 0.12 &&
+            coord[1] >= 0.34 &&
+            coord[1] <= 0.4
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.secondGame._id,
+              { ...user.game.secondGame._doc, foundOdlaw: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Odlaw was not found", found });
+          }
+          break;
+        default:
+          res.json({ message: "Character is not in this map", found });
+          break;
+      }
+    }
+    res.json({
+      message: `${character} was found!`,
+      found,
+      foundCharacters,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ ...error, found });
+  }
+});
+
+//-------Game Three------------
+exports.findCharacterGameThree = asyncHandler(async (req, res, next) => {
+  try {
+    const { character } = req.params;
+    const { coord } = req.body;
+    let found = false;
+    let foundCharacters = {};
+    if (!coord) {
+      res.json({ message: "No coords were received", found });
+    } else {
+      const user = await findUser(req.body.userID);
+      switch (character) {
+        case "waldo":
+          if (
+            coord[0] >= 0.26 &&
+            coord[0] <= 0.3 &&
+            coord[1] >= 0.31 &&
+            coord[1] <= 0.39
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.thirdGame._id,
+              { ...user.game.thirdGame._doc, foundWaldo: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Waldo was not found", found });
+          }
+          break;
+        case "wenda":
+          if (
+            coord[0] >= 0.24 &&
+            coord[0] <= 0.26 &&
+            coord[1] >= 0.7 &&
+            coord[1] <= 0.77
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.thirdGame._id,
+              { ...user.game.thirdGame._doc, foundWenda: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Wenda was not found", found });
+          }
+          break;
+        case "wizard":
+          if (
+            coord[0] >= 0.6 &&
+            coord[0] <= 0.63 &&
+            coord[1] >= 0.84 &&
+            coord[1] <= 0.93
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.thirdGame._id,
+              { ...user.game.thirdGame._doc, foundWizard: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Wizard was not found", found });
+          }
+          break;
+        case "odlaw":
+          if (
+            coord[0] >= 0.58 &&
+            coord[0] <= 0.62 &&
+            coord[1] >= 0.63 &&
+            coord[1] <= 0.7
+          ) {
+            found = true;
+            foundCharacters = await Map.findByIdAndUpdate(
+              user.game.thirdGame._id,
+              { ...user.game.thirdGame._doc, foundOdlaw: true },
+              { new: true }
+            );
+          } else {
+            return res.json({ message: "Odlaw was not found", found });
+          }
+          break;
+        default:
+          res.json({ message: "Character is not in this map", found });
+          break;
+      }
+    }
+    res.json({
+      message: `${character} was found!`,
+      found,
+      foundCharacters,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ ...error, found });
+  }
+});

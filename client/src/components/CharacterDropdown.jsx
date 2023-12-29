@@ -44,13 +44,11 @@ const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
       );
 
       const result = await res.json();
-
+      console.log(result);
       if (result.found) {
         if (result.foundCharacters.foundEveryone) {
-          console.log("redirecting");
-          navigate("/gameTwo");
+          navigate("/gameThree");
         } else {
-          console.log("found one");
           setFoundCharacters(result.foundCharacters);
         }
       }

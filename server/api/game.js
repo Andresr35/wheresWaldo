@@ -18,4 +18,7 @@ router.post("/firstGame/wenda", mapController.findWendaGameOne);
 router.post("/firstGame/wizard", mapController.findWizardGameOne);
 router.post("/firstGame/Odlaw", mapController.findOdlawGameOne);
 
+router.post("/secondGame/:character", mapController.findCharacterGameTwo);
+router.post("/thirdGame/:character", mapController.findCharacterGameThree);
+
 module.exports = router;

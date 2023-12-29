@@ -9,10 +9,20 @@ exports.getUser = asyncHandler(async (req, res, next) => {
       const result = await User.findById(req.params.userID)
         .populate({
           path: "game",
-          populate: {
-            path: "firstGame",
-            model: "Map",
-          },
+          populate: [
+            {
+              path: "firstGame",
+              model: "Map",
+            },
+            {
+              path: "secondGame",
+              model: "Map",
+            },
+            {
+              path: "thirdGame",
+              model: "Map",
+            },
+          ],
         })
         .exec();
       res.json({

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
 
-const SecondMap = () => {
+const ThirdMap = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coord, setCoord] = useState([]);
 
@@ -28,7 +28,6 @@ const SecondMap = () => {
       setCoord([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
     }
   };
-
   return (
     <div onClick={dropDownControl}>
       <Nav />
@@ -39,12 +38,12 @@ const SecondMap = () => {
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
-            game="secondGame"
+            game="thirdGame"
           />
         )}
         <img
           className="waldoImage"
-          src="../../waldoAtTheBeach.jpg"
+          src="../../waldoAtTheTrack.jpg"
           alt="Waldo example"
         />
       </div>
@@ -52,4 +51,4 @@ const SecondMap = () => {
   );
 };
 
-export default SecondMap;
+export default ThirdMap;
