@@ -5,10 +5,11 @@ import CharacterDropdown from "../components/CharacterDropdown";
 const FirstMap = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coord, setCoord] = useState([]);
+
   const clientWidth = useRef(0);
   const clientHeight = useRef(0);
 
-  const dropDownControl = (e) => {
+  const dropDownControl = async (e) => {
     e.preventDefault();
     if (
       e.target.className !== "waldoImage" &&
@@ -38,7 +39,7 @@ const FirstMap = () => {
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
-            game="gameOne"
+            game="firstGame"
           />
         )}
         <img

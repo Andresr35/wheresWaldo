@@ -1,6 +1,27 @@
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
+  const [foundCharacters, setFoundCharacters] = useState({
+    foundWaldo: false,
+    foundWenda: false,
+    foundWizard: false,
+    foundOdlaw: false,
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch(
+        `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
+      );
+      const result = await res.json();
+      setFoundCharacters(result.result.game[game]);
+    };
+    fetchUser();
+  }, [game]);
+
   const validateClick = async (character) => {
     try {
       console.log(
@@ -23,7 +44,16 @@ const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
       );
 
       const result = await res.json();
-      console.log(result);
+
+      if (result.found) {
+        if (result.foundCharacters.foundEveryone) {
+          console.log("redirecting");
+          navigate("/gameTwo");
+        } else {
+          console.log("found one");
+          setFoundCharacters(result.foundCharacters);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -31,30 +61,38 @@ const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
 
   return (
     <div className="dropDown" style={{ top: coord[1], left: coord[0] }}>
-      <img
-        onClick={() => validateClick("odlaw")}
-        className="character"
-        src="../../odlaw.png"
-        alt="odlaw"
-      />
-      <img
-        onClick={() => validateClick("wizard")}
-        className="character"
-        src="../../wizard.png"
-        alt="wizard"
-      />
-      <img
-        onClick={() => validateClick("wenda")}
-        className="character"
-        src="../../wenda.png"
-        alt="wenda"
-      />
-      <img
-        onClick={() => validateClick("waldo")}
-        className="character"
-        src="../../waldoChar.png"
-        alt="waldo"
-      />
+      {!foundCharacters.foundOdlaw && (
+        <img
+          onClick={() => validateClick("odlaw")}
+          className="character"
+          src="../../odlaw.png"
+          alt="odlaw"
+        />
+      )}
+      {!foundCharacters.foundWizard && (
+        <img
+          onClick={() => validateClick("wizard")}
+          className="character"
+          src="../../wizard.png"
+          alt="wizard"
+        />
+      )}
+      {!foundCharacters.foundWenda && (
+        <img
+          onClick={() => validateClick("wenda")}
+          className="character"
+          src="../../wenda.png"
+          alt="wenda"
+        />
+      )}
+      {!foundCharacters.foundWaldo && (
+        <img
+          onClick={() => validateClick("waldo")}
+          className="character"
+          src="../../waldoChar.png"
+          alt="waldo"
+        />
+      )}
     </div>
   );
 };

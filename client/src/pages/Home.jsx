@@ -42,13 +42,14 @@ const Home = () => {
       });
       const result = await res.json();
       localStorage.setItem("userID", result.user._id);
+      // setFoundCharacters(result.result.game.firstGame);
     } else {
       // is game finished? if not continue else create a new user
       const res = await fetch(
         `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
       );
-      const result = await res.json();
-      console.log(result);
+      await res.json();
+      // setFoundCharacters(result.result.game.firstGame);
     }
   };
 
@@ -63,7 +64,7 @@ const Home = () => {
         example.
       </p>
       <Link to="/gameOne" onClick={startGame}>
-        Start
+        {!localStorage.getItem("userID") ? "Start" : "Continue"}
       </Link>
       <div style={{ position: "relative" }}>
         {showDropdown && (
@@ -71,7 +72,13 @@ const Home = () => {
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
-            game="Tutorial"
+            game="tutorial"
+            foundCharacters={{
+              foundWaldo: false,
+              foundWenda: false,
+              foundWizard: false,
+              foundOdlaw: false,
+            }}
           />
         )}
         <img

@@ -8,4 +8,13 @@ const MapSchema = new Schema({
   foundOdlaw: { type: Boolean, default: false },
 });
 
+MapSchema.virtual("foundEveryone").get(function () {
+  return (
+    this.foundWaldo && this.foundWenda && this.foundWizard && this.foundOdlaw
+  );
+});
+
+MapSchema.set("toObject", { virtuals: true });
+MapSchema.set("toJSON", { virtuals: true });
+
 module.exports = mongoose.model("Map", MapSchema);

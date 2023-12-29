@@ -6,7 +6,15 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     if (!req.params.userID) {
       res.json({ message: "Missing User ID" });
     } else {
-      const result = await User.findById(req.params.userID).exec();
+      const result = await User.findById(req.params.userID)
+        .populate({
+          path: "game",
+          populate: {
+            path: "firstGame",
+            model: "Map",
+          },
+        })
+        .exec();
       res.json({
         message: "success",
         result,

@@ -13,9 +13,9 @@ router.get("/tutorial", (req, res, next) => {
 router.post("/start", mapController.startGame);
 router.post("/tutorial/waldo", mapController.findWaldoTutorial);
 
-router.post("/gameOne/waldo", mapController.findWaldoGameOne);
-router.post("/gameOne/wenda", mapController.findWendaGameOne);
-router.post("/gameOne/wizard", mapController.findWizardGameOne);
-router.post("/gameOne/Odlaw", mapController.findOdlawGameOne);
+router.post("/firstGame/waldo", mapController.findWaldoGameOne);
+router.post("/firstGame/wenda", mapController.findWendaGameOne);
+router.post("/firstGame/wizard", mapController.findWizardGameOne);
+router.post("/firstGame/Odlaw", mapController.findOdlawGameOne);
 
 module.exports = router;
