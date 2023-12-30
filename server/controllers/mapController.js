@@ -22,47 +22,104 @@ const findUser = async (userID) => {
     .exec();
 };
 
-exports.findWaldoTutorial = asyncHandler(async (req, res, next) => {
-  const coord = req.body.coord;
+exports.findCharacterTutorial = asyncHandler(async (req, res, next) => {
+  const { coord } = req.body;
+  const { character } = req.params;
   if (!coord) {
     res.send("No coords were received");
-  } else if (
-    coord[0] >= 0.42 &&
-    coord[0] <= 0.45 &&
-    coord[1] >= 0.73 &&
-    coord[1] <= 0.8
-  ) {
-    res.send("Waldo was found!");
   } else {
+    switch (character) {
+      case "waldo":
+        if (
+          coord[0] >= 0.6 &&
+          coord[0] <= 0.63 &&
+          coord[1] >= 0.36 &&
+          coord[1] <= 0.42
+        ) {
+          found = true;
+        } else {
+          return res.json({ message: "Waldo was not found", found });
+        }
+        break;
+      case "wenda":
+        if (
+          coord[0] >= 0.76 &&
+          coord[0] <= 0.78 &&
+          coord[1] >= 0.39 &&
+          coord[1] <= 0.44
+        ) {
+          found = true;
+        } else {
+          return res.json({ message: "Wenda was not found", found });
+        }
+        break;
+      case "wizard":
+        if (
+          coord[0] >= 0.26 &&
+          coord[0] <= 0.28 &&
+          coord[1] >= 0.34 &&
+          coord[1] <= 0.38
+        ) {
+          found = true;
+        } else {
+          return res.json({ message: "Wizard was not found", found });
+        }
+        break;
+      case "odlaw":
+        if (
+          coord[0] >= 0.09 &&
+          coord[0] <= 0.12 &&
+          coord[1] >= 0.34 &&
+          coord[1] <= 0.4
+        ) {
+          found = true;
+        } else {
+          return res.json({ message: "Odlaw was not found", found });
+        }
+        break;
+      default:
+        res.json({ message: "Character is not in this map", found });
+        break;
+    }
     res.send("Waldo was not found");
   }
 });
 
 exports.startGame = asyncHandler(async (req, res, next) => {
   // save date to Game Controller
-  const gameOne = new Map();
-  await gameOne.save();
-  const gameTwo = new Map();
-  await gameTwo.save();
-  const gameThree = new Map();
-  await gameThree.save();
-
-  const game = new Game({
-    startTime: req.body.date,
-    firstGame: gameOne._id,
-    secondGame: gameTwo._id,
-    thirdGame: gameThree._id,
-  });
-  await game.save();
-
-  const user = new User({
-    game: game._id,
-  });
-  await user.save();
-  res.json({
-    user: { ...user, game: { ...game, firstGame } },
-    game,
-  });
+  try {
+    const gameOne = new Map();
+    await gameOne.save();
+    const gameTwo = new Map();
+    await gameTwo.save();
+    const gameThree = new Map();
+    await gameThree.save();
+    const { date, name } = req.body;
+    const game = new Game({
+      startTime: date,
+      endTime: date,
+      firstGame: gameOne._id,
+      secondGame: gameTwo._id,
+      thirdGame: gameThree._id,
+    });
+    const user = new User({
+      game: game._id,
+      name: name,
+    });
+    game.user = user._id;
+    await game.save();
+    await user.save();
+    res.json({
+      user: { ...user, game: { ...game } },
+      game,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      error: error.stack,
+      message: "There was an error starting",
+    });
+  }
 });
 
 exports.finishGame = asyncHandler(async (req, res, next) => {

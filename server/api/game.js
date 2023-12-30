@@ -13,13 +13,12 @@ router.get("/tutorial", (req, res, next) => {
 router.post("/start", mapController.startGame);
 router.post("/finish", mapController.finishGame);
 
-router.post("/tutorial/waldo", mapController.findWaldoTutorial);
-
 router.post("/firstGame/waldo", mapController.findWaldoGameOne);
 router.post("/firstGame/wenda", mapController.findWendaGameOne);
 router.post("/firstGame/wizard", mapController.findWizardGameOne);
 router.post("/firstGame/Odlaw", mapController.findOdlawGameOne);
 
+router.post("/tutorial/:character", mapController.findCharacterTutorial);
 router.post("/secondGame/:character", mapController.findCharacterGameTwo);
 router.post("/thirdGame/:character", mapController.findCharacterGameThree);
 

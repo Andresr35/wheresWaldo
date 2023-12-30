@@ -1,5 +1,18 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
+const Game = require("../models/Game");
+
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+  const allGames = await Game.find(
+    { finished: true },
+    {},
+    { populate: "user" }
+  ).exec();
+  res.json({
+    message: "Here are all the games that have finished",
+    allGames,
+  });
+});
 
 exports.getUser = asyncHandler(async (req, res, next) => {
   try {
@@ -27,10 +40,13 @@ exports.getUser = asyncHandler(async (req, res, next) => {
         .exec();
       res.json({
         message: "success",
-        result,
+        ...result,
       });
     }
   } catch (error) {
-    res.json(error);
+    res.json({
+      error: error.stack,
+      message: "There was an error getting the User",
+    });
   }
 });

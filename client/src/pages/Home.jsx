@@ -1,13 +1,15 @@
 import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const [name, setName] = useState("user");
   const [coord, setCoord] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const clientWidth = useRef(0);
   const clientHeight = useRef(0);
+  const navigate = useNavigate();
 
   const dropDownControl = (e) => {
     e.preventDefault();
@@ -30,26 +32,47 @@ const Home = () => {
   };
 
   const startGame = async () => {
-    const date = new Date();
     if (!localStorage.getItem("userID")) {
       // User does not exist
-      const res = await fetch("http://localhost:3000/api/game/start", {
+      const startResults = await fetch("http://localhost:3000/api/game/start", {
         method: "POST",
-        "Content-Type": "application/json",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          date: date,
+          date: Date.now(),
+          name: name,
         }),
       });
-      const result = await res.json();
-      localStorage.setItem("userID", result.user._id);
-      // setFoundCharacters(result.result.game.firstGame);
+      const startData = await startResults.json();
+      localStorage.setItem("userID", startData.user._doc._id);
     } else {
-      // is game finished? if not continue else create a new user
-      const res = await fetch(
+      const userResults = await fetch(
         `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
       );
-      await res.json();
-      // setFoundCharacters(result.result.game.firstGame);
+      const userData = await userResults.json();
+      console.log(userData);
+      if (userData._doc.game.finished) {
+        localStorage.removeItem("userID");
+        const startResults = await fetch(
+          "http://localhost:3000/api/game/start",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              date: Date.now(),
+              name: name,
+            }),
+          }
+        );
+        const startData = await startResults.json();
+        console.log(startData);
+        localStorage.setItem("userID", startData.user._doc._id);
+      } else {
+        if (userData._doc.game.firstGame.foundEveryone) {
+          if (userData._doc.game.secondGame.foundEveryone) {
+            navigate("/gameThree");
+          } else navigate("/gameTwo");
+        }
+      }
     }
   };
 
@@ -63,6 +86,16 @@ const Home = () => {
         you have to find Waldo and his friends as fast as you can! Here is an
         example.
       </p>
+      <label>
+        Name:
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter Name"
+        />
+      </label>
+
       <Link to="/gameOne" onClick={startGame}>
         {!localStorage.getItem("userID") ? "Start" : "Continue"}
       </Link>

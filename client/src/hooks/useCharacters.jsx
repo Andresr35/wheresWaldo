@@ -9,11 +9,13 @@ const useCharacters = (game) => {
   });
   useEffect(() => {
     const fetchUser = async () => {
+      if (game == "tutorial") return;
       const res = await fetch(
         `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
       );
       const result = await res.json();
-      setFoundCharacters(result.result.game[game]);
+      console.log(result);
+      setFoundCharacters(result._doc.game[game]);
     };
     fetchUser();
   }, [game]);

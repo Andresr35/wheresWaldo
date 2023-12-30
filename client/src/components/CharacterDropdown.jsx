@@ -22,7 +22,9 @@ const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
     if (result._doc.finished) navigate("/leaderboard");
     else console.log("What happened?");
   };
+
   const validateClick = async (character) => {
+    if (game == "tutorial") return;
     try {
       console.log(
         `Validating whether ${character} is at [${coord[0] / clientWidth} , ${
