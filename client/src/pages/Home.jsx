@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
 import { Link, useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Home = () => {
+const Home = ({ url }) => {
   const [name, setName] = useState("user");
   const [coord, setCoord] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -34,7 +35,7 @@ const Home = () => {
   const startGame = async () => {
     if (!localStorage.getItem("userID")) {
       // User does not exist
-      const startResults = await fetch("http://localhost:3000/api/game/start", {
+      const startResults = await fetch(`${url}/api/game/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -46,23 +47,20 @@ const Home = () => {
       localStorage.setItem("userID", startData.user._doc._id);
     } else {
       const userResults = await fetch(
-        `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
+        `${url}/api/user/${localStorage.getItem("userID")}`
       );
       const userData = await userResults.json();
       console.log(userData);
       if (userData._doc.game.finished) {
         localStorage.removeItem("userID");
-        const startResults = await fetch(
-          "http://localhost:3000/api/game/start",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              date: Date.now(),
-              name: name,
-            }),
-          }
-        );
+        const startResults = await fetch(`${url}/api/game/start`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: Date.now(),
+            name: name,
+          }),
+        });
         const startData = await startResults.json();
         console.log(startData);
         localStorage.setItem("userID", startData.user._doc._id);
@@ -106,6 +104,7 @@ const Home = () => {
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
             game="tutorial"
+            url={url}
             foundCharacters={{
               foundWaldo: false,
               foundWenda: false,
@@ -122,6 +121,9 @@ const Home = () => {
       </div>
     </main>
   );
+};
+Home.propTypes = {
+  url: PropTypes.string.isRequired,
 };
 
 export default Home;

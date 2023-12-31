@@ -6,12 +6,18 @@ import ThirdMap from "./pages/ThirdMap";
 import Leaderboard from "./pages/Leaderboard";
 
 const Router = () => {
+  const url =
+    // eslint-disable-next-line no-undef
+    process.env.NODE_ENV == "development"
+      ? "http://localhost:3000"
+      : "https://whereswaldo-production.up.railway.app";
+
   const router = createBrowserRouter([
-    { path: "/", element: <Home /> },
-    { path: "/gameOne", element: <FirstMap /> },
-    { path: "gameTwo", element: <SecondMap /> },
-    { path: "gameThree", element: <ThirdMap /> },
-    { path: "leaderboard", element: <Leaderboard /> },
+    { path: "/", element: <Home url={url} /> },
+    { path: "/gameOne", element: <FirstMap url={url} /> },
+    { path: "gameTwo", element: <SecondMap url={url} /> },
+    { path: "gameThree", element: <ThirdMap url={url} /> },
+    { path: "leaderboard", element: <Leaderboard url={url} /> },
   ]);
   return <RouterProvider router={router} />;
 };

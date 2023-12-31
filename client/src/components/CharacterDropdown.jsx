@@ -2,12 +2,12 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useCharacters from "../hooks/useCharacters";
 
-const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
+const CharacterDropdown = ({ coord, clientHeight, clientWidth, game, url }) => {
   const navigate = useNavigate();
-  const { foundCharacters, setFoundCharacters } = useCharacters(game);
+  const { foundCharacters, setFoundCharacters } = useCharacters(game, url);
 
   const finishGame = async () => {
-    const res = await fetch("http://localhost:3000/api/game/finish", {
+    const res = await fetch(`${url}/api/game/finish`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,19 +31,16 @@ const CharacterDropdown = ({ coord, clientHeight, clientWidth, game }) => {
           coord[1] / clientHeight
         }] on ${game}`
       );
-      const res = await fetch(
-        `http://localhost:3000/api/game/${game}/${character}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            coord: [coord[0] / clientWidth, coord[1] / clientHeight],
-            userID: localStorage.getItem("userID"),
-          }),
-        }
-      );
+      const res = await fetch(`${url}/api/game/${game}/${character}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          coord: [coord[0] / clientWidth, coord[1] / clientHeight],
+          userID: localStorage.getItem("userID"),
+        }),
+      });
 
       const result = await res.json();
       console.log(result);
@@ -116,6 +113,7 @@ CharacterDropdown.propTypes = {
   clientHeight: PropTypes.number.isRequired,
   clientWidth: PropTypes.number.isRequired,
   game: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default CharacterDropdown;

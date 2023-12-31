@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useCharacters = (game) => {
+const useCharacters = (game, url) => {
   const [foundCharacters, setFoundCharacters] = useState({
     foundWaldo: false,
     foundWenda: false,
@@ -11,14 +11,14 @@ const useCharacters = (game) => {
     const fetchUser = async () => {
       if (game == "tutorial") return;
       const res = await fetch(
-        `http://localhost:3000/api/user/${localStorage.getItem("userID")}`
+        `${url}/api/user/${localStorage.getItem("userID")}`
       );
       const result = await res.json();
       console.log(result);
       setFoundCharacters(result._doc.game[game]);
     };
     fetchUser();
-  }, [game]);
+  }, [game, url]);
   return { foundCharacters, setFoundCharacters };
 };
 

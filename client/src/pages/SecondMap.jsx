@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
+import PropTypes from "prop-types";
 
-const SecondMap = () => {
+const SecondMap = (url) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coord, setCoord] = useState([]);
 
@@ -36,6 +37,7 @@ const SecondMap = () => {
       <div style={{ position: "relative" }}>
         {showDropdown && (
           <CharacterDropdown
+            url={url}
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
@@ -50,6 +52,10 @@ const SecondMap = () => {
       </div>
     </div>
   );
+};
+
+SecondMap.propTypes = {
+  url: PropTypes.string.isRequired,
 };
 
 export default SecondMap;

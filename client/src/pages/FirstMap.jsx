@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
+import PropTypes from "prop-types";
 
-const FirstMap = () => {
+const FirstMap = ({ url }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coord, setCoord] = useState([]);
 
@@ -40,6 +41,7 @@ const FirstMap = () => {
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
             game="firstGame"
+            url={url}
           />
         )}
         <img
@@ -50,6 +52,10 @@ const FirstMap = () => {
       </div>
     </div>
   );
+};
+
+FirstMap.propTypes = {
+  url: PropTypes.string.isRequired,
 };
 
 export default FirstMap;

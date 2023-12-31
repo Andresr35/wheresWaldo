@@ -1,8 +1,9 @@
 import Nav from "../components/Nav";
 import useRankings from "../hooks/useRankings";
+import PropTypes from "prop-types";
 
-const Leaderboard = () => {
-  const rankings = useRankings();
+const Leaderboard = ({ url }) => {
+  const rankings = useRankings(url);
   return (
     <>
       <Nav />
@@ -24,6 +25,10 @@ const Leaderboard = () => {
       </table>
     </>
   );
+};
+
+Leaderboard.propTypes = {
+  url: PropTypes.string.isRequired,
 };
 
 export default Leaderboard;

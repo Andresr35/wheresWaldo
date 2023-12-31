@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
+import PropTypes from "prop-types";
 
-const ThirdMap = () => {
+const ThirdMap = ({ url }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coord, setCoord] = useState([]);
 
@@ -35,6 +36,7 @@ const ThirdMap = () => {
       <div style={{ position: "relative" }}>
         {showDropdown && (
           <CharacterDropdown
+            url={url}
             coord={coord}
             clientHeight={clientHeight.current}
             clientWidth={clientWidth.current}
@@ -50,5 +52,7 @@ const ThirdMap = () => {
     </div>
   );
 };
-
+ThirdMap.propTypes = {
+  url: PropTypes.string.isRequired,
+};
 export default ThirdMap;
