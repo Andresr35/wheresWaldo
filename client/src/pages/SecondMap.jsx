@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import CharacterDropdown from "../components/CharacterDropdown";
 import PropTypes from "prop-types";
 
-const SecondMap = (url) => {
+const SecondMap = ({ url }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coord, setCoord] = useState([]);
 
